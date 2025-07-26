@@ -11,7 +11,49 @@ export default function AuthScreen() {
 
     const [hasBiometrics, setHasBiometrics] = useState(false);
     const [isAuthenticating, setIsAuthenticating] = useState(false);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
+    const router = useRouter();
+
+    useEffect(() => {
+        checkBiometrics
+    }, []);
+
+    const checkBiometrics = async () => {
+       const hasHardware = await LocalAuthentication.hasHardwareAsync();
+       const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+       setHasBiometrics(hasBiometrics && isEnrolled);
+}
+
+    const authenticate = async () => {
+        try {
+            setIsAuthenticating(true);
+            setError(null);
+
+            const hasHardware = await LocalAuthentication.hasHardwareAsync();
+            const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+            const supported = await LocalAuthentication.supportedAuthenticationTypesAsync();
+
+            // Check any other way to authenticate or error
+            if (supported.length === 0) {
+                throw new Error("No Biometric authentication supported");
+            }
+
+            const auth = await LocalAuthentication.authenticateAsync({
+                promptMessage: hasHardware && isEnrolled ? "Use Touch ID / Face ID" : "Enter your PIN",
+                fallbackLabel: 'Use PIN',
+                cancelLabel: 'Cancel',
+                disableDeviceFallback: false,
+            });
+
+            if(auth.success){
+                router.replace('/home')
+            } else {
+                setError('Authentication failed. Please try again.')
+            }
+        } catch (error) {
+            
+        }
+    }
 
     return (
         <LinearGradient colors={["#000033", "#000076"]} style={styles.container}>
@@ -32,7 +74,11 @@ export default function AuthScreen() {
                     <Text style={styles.instructionText}>
                         {hasBiometrics ? "Unlock with Biometrics to access medications" : "Unlock with PIN to access medications"}
                     </Text>
-                    <TouchableOpacity style={[styles.button, isAuthenticating && styles.buttonDisabled]}>
+                    <TouchableOpacity 
+                        style={[styles.button, isAuthenticating && styles.buttonDisabled]} 
+                        onPress={authenticate} 
+                        disabled={isAuthenticating}
+                    >
                         <Ionicons 
                             name={hasBiometrics ?
                                 'finger-print-outline':'keypad-outline' }
