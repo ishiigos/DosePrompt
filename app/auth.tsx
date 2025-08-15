@@ -19,10 +19,15 @@ export default function AuthScreen() {
     }, []);
 
     const checkBiometrics = async () => {
-       const hasHardware = await LocalAuthentication.hasHardwareAsync();
-       const isEnrolled = await LocalAuthentication.isEnrolledAsync();
-       setHasBiometrics(hasBiometrics && isEnrolled);
-}
+        try {
+            const hasHardware = await LocalAuthentication.hasHardwareAsync();
+            const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+            // set based on actual hardware + enrollment
+            setHasBiometrics(hasHardware && isEnrolled);
+        } catch (e) {
+            setHasBiometrics(false);
+        }
+    };
 
     const authenticate = async () => {
         try {
@@ -34,26 +39,35 @@ export default function AuthScreen() {
             const supported = await LocalAuthentication.supportedAuthenticationTypesAsync();
 
             // Check any other way to authenticate or error
-            if (supported.length === 0) {
+            if (!hasHardware || !isEnrolled || supported.length === 0) {
                 throw new Error("No Biometric authentication supported");
             }
 
             const auth = await LocalAuthentication.authenticateAsync({
-                promptMessage: hasHardware && isEnrolled ? "Use Touch ID / Face ID" : "Enter your PIN",
+                promptMessage: "Use Touch ID / Face ID",
                 fallbackLabel: 'Use PIN',
                 cancelLabel: 'Cancel',
                 disableDeviceFallback: false,
             });
 
             if(auth.success){
-                router.replace('/home')
-            } else {
-                setError('Authentication failed. Please try again.')
+                setIsAuthenticating(false);
+                router.replace('/home');
+                return;
             }
-        } catch (error) {
-            
+
+            if (auth.error === "user_cancel" || auth.error === "system_cancel" || auth.error === "app_cancel") {
+                setError("Authentication canceled.");
+            } else {
+                setError("Authentication failed. Please try again.");
+            }
+        } catch (e: any) {
+            setError(e?.message || "Authentication error.");
+        } finally {
+            // Always re-enable the button
+            setIsAuthenticating(false);
         }
-    }
+    };
 
     return (
         <LinearGradient colors={["#000033", "#000076"]} style={styles.container}>
