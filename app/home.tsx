@@ -116,7 +116,7 @@ function CustomButton({
 export default function HomeScreen(){
     const router = useRouter();
     return(
-        <ScrollView showsVerticalScrollIndicator={false} style={{ backgroundColor: '#e7e7e7', flex: 1 }}>
+        <ScrollView showsVerticalScrollIndicator={false} style={{ backgroundColor: '#E7E7E7', flex: 1 }}>
             <LinearGradient
             colors={['#000033', '#000056']}
             style={{ minHeight: '40%', flex: 1, backgroundColor: '#000076', borderRadius: 25, overflow: 'hidden' }}>
