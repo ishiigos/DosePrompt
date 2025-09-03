@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   calTitle: { fontSize: 16, fontWeight: '600', color: '#111' },
-  navBtn: { padding: 6, borderRadius: 6, borderWidth: 1, borderColor: '#caced1' },
+  navBtn: { padding: 6, borderRadius: 6, borderWidth: 1, borderColor: '#caced1' }, 
   navText: { fontSize: 14, color: '#111' },
 
   weekHeader: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 6, paddingHorizontal: 6 },
@@ -402,13 +402,13 @@ const styles = StyleSheet.create({
     bottom: 62 + BOTTOM_SAFE,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: '#fff',
+    backgroundColor: '#000056',
   },
   monthlyButton: {
     alignItems: 'center',
     paddingVertical: 12,
     borderRadius: 10,
-    backgroundColor: '#0a7aff',
+    backgroundColor: '# ',
   },
   monthlyButtonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
 
@@ -419,9 +419,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff', borderTopWidth: 1, borderTopColor: '#eee',
   },
   bottomButton: { flex: 1, alignItems: 'center', paddingVertical: 14, borderRadius: 10 },
-  cancel: { backgroundColor: '#e5e7eb' },
-  add: { backgroundColor: '#0a7aff' },
-  bottomButtonText: { color: '#111', fontSize: 16, fontWeight: '600' },
+  cancel: { backgroundColor: '#a00000ff' },
+  add: { backgroundColor: '#000076' },
+  bottomButtonText: { color: '#e7e7e7', fontSize: 16, fontWeight: '600' },
 
   // Modal
   modalBackdrop: {
@@ -441,7 +441,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     paddingVertical: 10,
     paddingHorizontal: 16,
-    backgroundColor: '#0a7aff',
+    backgroundColor: '#000076',
     borderRadius: 10,
   },
   modalCloseText: { color: '#fff', fontWeight: '600' },
